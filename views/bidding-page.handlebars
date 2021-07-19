@@ -1,0 +1,79 @@
+
+   
+    <!--Container Main start-->
+    <div>
+        <table class="table table-dark table-striped border border-4">
+        <thead>
+            <tr>
+            <th scope="col">Course Code</th>
+            <th scope="col">Faculty</th>
+            <th scope="col">Term 1 Coure Name with Credits</th>
+            <th scope="col">Previous Bids</th>
+            <th scope="col">Seats</th>
+            <th scope="col">Bidding Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+                {{#ifeq this.course_term 1}}
+                <tr>
+                    <td scope="row" id="course_code">{{this.course_code}}</td>
+                    <td scope="row" id="course_fac">{{this.course_faculty}}</td>
+                    <td scope="row" id="course_name">{{this.course_name}} : {{this.course_credits}}</td>
+                    <td scope="row"><button class="btn btn-primary" id="view_bids">View</button></td>
+                    <td scope="row" id="course_seats">{{this.course_seats}}</td>
+                    <td scope="row">
+                        <input size="7" type="number" placeholder="Enter Bid">
+                    </td>
+                </tr>
+                {{/ifeq}}
+            {{/each}}
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align: center">Bid Minimum 1 for Each Course</td>
+                    <td><button class="btn btn-primary">Submit Bid</button></td>
+                </tr>
+            </tfoot>
+        </tbody>
+        </table>
+
+        <hr>
+
+        <table class="table table-dark table-striped border border-4">
+        <thead>
+            <tr>
+            <th scope="col">Course Code</th>
+            <th scope="col">Faculty</th>
+            <th scope="col">Term 2 Coure Name</th>
+            <th scope="col">Previous Bids</th>
+            <th scope="col">Seats</th>
+            <th scope="col">Bidding Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+                {{#ifeq this.course_term 2}}
+
+            <tr>
+                <td scope="row">{{this.course_code}}</td>
+                <td scope="row">{{this.course_faculty}}</td>
+                <td scope="row">{{this.course_name}} : {{this.course_credits}}</td>
+                <td scope="row"><button class="btn btn-primary">View</button></td>
+                <td scope="row">{{this.course_seats}}</td>
+                <td scope="row">
+                    <input size="8" type="number" min="1" placeholder="Enter Bid">
+                </td>
+            </tr>
+                {{/ifeq}}
+            {{/each}}
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align: center">Bid Minimum 1 for Each Course</td>
+                    <td><button class="btn btn-primary">Submit Bid</button></td>
+                </tr>
+            </tfoot>
+        </tbody>
+        </table>
+    </div>
+    <!--Container Main end-->
+                                               

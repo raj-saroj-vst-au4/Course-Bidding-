@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>SJM SOM Course Bidding</title>
+        <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
+        <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+        <link href='css/portal.css' rel='stylesheet'>
+        <script type='text/javascript'>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const showNavbar = (toggleId, navId, bodyId, headerId) =>{
+            const toggle = document.getElementById(toggleId),
+            nav = document.getElementById(navId),
+            bodypd = document.getElementById(bodyId),
+            headerpd = document.getElementById(headerId)
+            
+            // Validate that all variables exist
+            if(toggle && nav && bodypd && headerpd){
+            toggle.addEventListener('click', ()=>{
+            // show navbar
+            nav.classList.toggle('show')
+            // change icon
+            toggle.classList.toggle('bx-x')
+            // add padding to body
+            bodypd.classList.toggle('body-pd')
+            // add padding to header
+            headerpd.classList.toggle('body-pd')
+            })
+            }
+            }
+            
+            showNavbar('header-toggle','nav-bar','body-pd','header')
+            
+            /*===== LINK ACTIVE =====*/
+            const linkColor = document.querySelectorAll('.nav_link')
+            
+            function colorLink(){
+            if(linkColor){
+            linkColor.forEach(l=> l.classList.remove('active'))
+            this.classList.add('active')
+            }
+            }
+            linkColor.forEach(l=> l.addEventListener('click', colorLink))
+        // Your code to run since DOM is loaded and ready
+        });
+        </script>
+    </head>
+    <body oncontextmenu='return false' class='snippet-body body-pd'>
+    <body id="body-pd">
+        <header class="header body-pd" id="header">
+            <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+            <div class="header_bids_left"><span class="nav-name">BID Points Left:</span> 120</div>
+            <div class="header_img"> <img src="images/SJMSOM_Logo.jpg" alt=""> </div>
+        </header>
+        <div class="l-navbar show" id="nav-bar">
+            <nav class="nav">
+                <div> <a href="/" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">Course Bidding</span> </a>
+                    <div class="nav_list"> <a href="/" class="nav_link active"> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Dashboard</span> </a> <a href="#" class="nav_link"> <i class='bx bx-user nav_icon'></i> <span class="nav_name">Users</span> </a> <a href="#" class="nav_link"> <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Stats</span> </a> </div>
+                </div> <a href="/logout" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> </a>
+            </nav>
+        </div>
+        <div class="modal right fade" id="prev_bids" tabindex="-1" role="dialog" aria-labelledby="previous-bids">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="prev_bids">Top Bids for <span id="course-code"></span></h5>
+                        <button class="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="highest-bids">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{{body}}}
+
+        <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+        <script type='text/javascript' src='/js/jquery-3.6.0.min.js'></script>
+        <script type='text/javascript' src='js/portal.js'></script>
+    </body>
+</html>

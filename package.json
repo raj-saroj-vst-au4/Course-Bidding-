@@ -1,0 +1,26 @@
+{
+  "name": "course-bidding",
+  "version": "1.0.0",
+  "description": "SJM SOM Course bidding software",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bidding"
+  ],
+  "author": "Raj",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.2",
+    "express-session": "^1.17.2",
+    "handlebars": "^4.7.7",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.2",
+    "nodemailer": "^6.6.2",
+    "nodemailer-sendgrid": "^1.0.3",
+    "passport": "^0.4.1"
+  }
+}

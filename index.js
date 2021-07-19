@@ -62,7 +62,7 @@ const isNotAuthenticated = (req, res, next) => {
 
 // add isAuthenticated
 //Render Routes
-app.get("/", RouteController.renderPortal);
+app.get("/", isAuthenticated, RouteController.renderPortal);
 
 app.get("/login", isNotAuthenticated, RouteController.renderLogin);
 

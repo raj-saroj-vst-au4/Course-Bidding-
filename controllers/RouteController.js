@@ -16,7 +16,7 @@ RouteController.renderPortal = async (req, res) => {
     { student_email: req.session.username },
     (err, data) => {
       //if(data.verified)
-      if (true) {
+      if (data.verified) {
         course_som.find({}, (err, data) => {
           if (err) {
             console.log(err);

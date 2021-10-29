@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
-const username = "userid"
-const password = "password"
+const username = "raj.s.saroj@gmail.com"
+const password = "felgqiekticorhjh"
 
 const email = {}
 

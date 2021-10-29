@@ -50,7 +50,7 @@
     <body id="body-pd">
         <header class="header body-pd" id="header">
             <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
-            <div class="header_bids_left"><span class="nav-name">BID Points Left:</span> 120</div>
+            <div class="header_bids_left"><span class="nav-name">BID Points Left:</span><span id="bidpoints-left"> 120</span></div>
             <div class="header_img"> <img src="images/SJMSOM_Logo.jpg" alt=""> </div>
         </header>
         <div class="l-navbar show" id="nav-bar">
@@ -65,7 +65,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="prev_bids">Top Bids for <span id="course-code"></span></h5>
-                        <button class="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        <button class="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">-</button>
                     </div>
                     <div class="modal-body" id="highest-bids">
                     </div>

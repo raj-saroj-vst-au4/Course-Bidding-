@@ -21,7 +21,7 @@ RouteController.renderPortal = async (req, res) => {
           if (err) {
             console.log(err);
           }
-          return res.render("bidding-page", { layout: 'portal', data: data });
+          return res.render("bidding-page", { layout: "portal", data: data });
         });
       } else {
         return res.send(
@@ -91,11 +91,11 @@ RouteController.registerStudent = async (req, res) => {
           student_pass: hashedPassword,
           confirmationCode: token,
         })
-        .save()
-        .then(() => {
+          .save()
+          .then(() => {
             mailer.sendConfirmation(new_student, token);
             return res.sendStatus(200);
-          })
+          });
       }
     }
   );
@@ -118,9 +118,56 @@ RouteController.verifyRegistration = async (req, res) => {
   );
 };
 
+RouteController.biddingHandler = async (req, res) => {
+  await student_som.findOne(
+    { student_email: req.session.username },
+    (err, result) => {
+      if (result.bidding_complete) {
+        return res.send(
+          "Sorry you've already finished bidding, please wait for the bidding window to reopen"
+        );
+      }
+    }
+  );
+  for (let i in req.body.bid_dataArray) {
+    console.log(
+      `${req.body.bid_dataArray[i].course_code} - ${req.body.bid_dataArray[i].bid}`
+    );
+    await course_som.findOneAndUpdate(
+      { course_code: req.body.bid_dataArray[i].course_code },
+      {
+        $push: {
+          course_students: {
+            $each: [
+              {
+                student_email: req.session.username,
+                student_bid: req.body.bid_dataArray[i].bid,
+              },
+            ],
+            $sort: -1,
+          },
+        },
+      }
+    );
+  }
+  await student_som.findOneAndUpdate(
+    { student_email: req.session.username },
+    { $set: { bidding_complete: true } },
+    (error, data) => {
+      if (data) {
+        return res.sendStatus(200).send("All Bids Successfully Placed");
+      } else {
+        return res.send("Invalid or Expired Token request");
+      }
+    }
+  );
+};
 
-RouteController.bid = async (req, res) => {
-  console.log(req.body)
-}
+//Already Bidded Middleware
+const hasBidded = async (req, res, next) => {};
+// RouteController.clearBid = async (req, res) => {
+//   console.log("Clearing all student bids");
+//   await course_som.updateMany({}, { $set: { course_students: [] } });
+// };
 
 module.exports = RouteController;

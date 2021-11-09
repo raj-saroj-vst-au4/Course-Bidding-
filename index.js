@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 8008;
 //Dependencies
 const RouteController = require("./controllers/RouteController");
 const course_som = require("./models/Subject");
+const student_som = require("./models/Student");
 
 //App usage extensions
 app.use(express.urlencoded({ extended: true }));
@@ -24,16 +25,15 @@ app.engine(
       allowProtoMethodsByDefault: true,
     },
     helpers: {
-      ifeq: function(a, b, options){
-        if(parseInt(a) == b){
-          return options.fn(this)
+      ifeq: function (a, b, options) {
+        if (parseInt(a) == b) {
+          return options.fn(this);
         }
-        return options.inverse(this)
-       }
-    }
+        return options.inverse(this);
+      },
+    },
   })
 );
-
 
 //App Session
 app.use(
@@ -60,7 +60,6 @@ const isNotAuthenticated = (req, res, next) => {
   }
 };
 
-// add isAuthenticated
 //Render Routes
 app.get("/", isAuthenticated, RouteController.renderPortal);
 
@@ -100,7 +99,14 @@ app.get(
 //app.get("/api/verifyReset/:tokenCode", RouteController.verifyReset);
 
 //Bidding routes
-app.post("/api/bidding", isAuthenticated, RouteController.bid)
+
+app.post(
+  "/api/bidding-handler",
+  isAuthenticated,
+  RouteController.biddingHandler
+);
+
+// app.post("/api/clear-bid", RouteController.clearBid);
 
 mongoose
   .connect(
@@ -114,5 +120,5 @@ mongoose
     });
   })
   .catch((err) => {
-    console.log(err)
+    console.log(err);
   });

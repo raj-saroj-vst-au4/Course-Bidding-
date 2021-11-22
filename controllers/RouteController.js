@@ -16,17 +16,19 @@ RouteController.renderPortal = async (req, res) => {
     { student_email: req.session.username },
     (err, data) => {
       //if(data.verified)
-      if (data.verified) {
+      if (data.verified && !data.bidding_complete) {
         course_som.find({}, (err, data) => {
           if (err) {
             console.log(err);
           }
           return res.render("bidding-page", { layout: "portal", data: data });
         });
-      } else {
+      } else if (!data.verified) {
         return res.send(
           "Please Check your IITB Email and Confirm Verification"
         );
+      } else {
+        return res.render("bidding-complete", { layout: "portal" });
       }
     }
   );
@@ -43,6 +45,10 @@ RouteController.renderRegister = (req, res) => {
 RouteController.logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/login");
+};
+
+RouteController.renderStats = (req, res) => {
+  return res.render("stats-page", { layout: "portal" });
 };
 
 RouteController.login = async (req, res) => {
@@ -119,16 +125,6 @@ RouteController.verifyRegistration = async (req, res) => {
 };
 
 RouteController.biddingHandler = async (req, res) => {
-  await student_som.findOne(
-    { student_email: req.session.username },
-    (err, result) => {
-      if (result.bidding_complete) {
-        return res.send(
-          "Sorry you've already finished bidding, please wait for the bidding window to reopen"
-        );
-      }
-    }
-  );
   for (let i in req.body.bid_dataArray) {
     console.log(
       `${req.body.bid_dataArray[i].course_code} - ${req.body.bid_dataArray[i].bid}`
@@ -144,7 +140,7 @@ RouteController.biddingHandler = async (req, res) => {
                 student_bid: req.body.bid_dataArray[i].bid,
               },
             ],
-            $sort: -1,
+            $sort: { student_bid: -1 },
           },
         },
       }
@@ -155,19 +151,59 @@ RouteController.biddingHandler = async (req, res) => {
     { $set: { bidding_complete: true } },
     (error, data) => {
       if (data) {
-        return res.sendStatus(200).send("All Bids Successfully Placed");
+        return res.status(200).send("All Bids Successfully Placed");
       } else {
-        return res.send("Invalid or Expired Token request");
+        return res.status(500).send("Invalid or Expired Token request");
       }
     }
   );
 };
 
-//Already Bidded Middleware
-const hasBidded = async (req, res, next) => {};
-// RouteController.clearBid = async (req, res) => {
-//   console.log("Clearing all student bids");
-//   await course_som.updateMany({}, { $set: { course_students: [] } });
+RouteController.fetchBidRange = async (req, res) => {
+  const course_code = req.body.course_code;
+  await course_som.findOne(
+    {
+      course_code: course_code,
+    },
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        return res.send(err);
+      }
+      console.log(
+        `First element ${data.course_students[0]}, Last Element ${
+          data.course_students.slice(-1)[0]
+        }`
+      );
+      const max_bid = data.course_students[0].student_bid;
+      const min_bid = data.course_students.slice(-1)[0].student_bid;
+      if (max_bid && min_bid) {
+        return res.status(200).send({ max: max_bid, min: min_bid });
+      } else {
+        return res.sendStatus(404);
+      }
+    }
+  );
+};
+
+RouteController.resetMyBid = async (req, res) => {
+  console.log(req.session.username);
+  //await course_som.updateMany({}, {$pullAll})
+};
+// const checkBidStatus = async (req) => {
+//   await student_som.findOne(
+//     { student_email: req.session.username },
+//     (err, result) => {
+//       if (result.bidding_complete) {
+//         return true;
+//       }
+//     }
+//   );
 // };
+
+RouteController.clearBid = async (req, res) => {
+  console.log("Clearing all student bids");
+  await course_som.updateMany({}, { $set: { course_students: [] } });
+};
 
 module.exports = RouteController;

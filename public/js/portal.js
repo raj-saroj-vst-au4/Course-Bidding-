@@ -1,7 +1,22 @@
 $(document).ready(function () {
-  $(".view_bids").on("click", () => {
-    console.log(this);
-    $("#prev_bids").modal("show");
+  $(".view_bids").on("click", function () {
+    var course_code = $(this).closest("tr").find("td:first").text();
+
+    $.ajax({
+      method: "POST",
+      url: "/api/fetch-bidrange",
+      data: { course_code: course_code },
+      status: {
+        200: function (data, status, xhr) {
+          $("#auc-course-code").html(course_code);
+          $("#prev_bids").modal("show");
+          console.log(data);
+        },
+        404: function (err) {
+          console.log(err);
+        },
+      },
+    });
   });
 
   // $(".bid-num").keyup(function () {
@@ -29,6 +44,19 @@ $(document).ready(function () {
     });
   });
 
+  $("#reset_bids").on("click", () => {
+    $.ajax({
+      method: "POST",
+      url: "/api/remove-individual-bid",
+      status: {
+        200: () => {
+          alert("Your bids have been reset");
+          window.location.reload();
+        },
+      },
+    });
+  });
+
   //bids remaining js
   $(".bid-num").keyup(function () {
     var totalbid = 0;
@@ -40,6 +68,7 @@ $(document).ready(function () {
     console.log(`points left ${ans}`);
     if (ans < 0) {
       alert("You've have reached your bidding limit !");
+      $(this).val("0");
     } else {
       $("#bidpoints-left").html(" " + ans);
     }
@@ -70,13 +99,24 @@ $(document).ready(function () {
         data: {
           bid_dataArray: bid_dataArray,
         },
-        success: function (data) {
-          return alert(data);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          return alert(jqXHR);
+        statusCode: {
+          200: () => {
+            alert("All Bids placed successfully");
+            location.reload();
+          },
+          409: () => {
+            alert(
+              "You've already placed your bid, please wait for the bidding windows to reopen"
+            );
+          },
+          500: () => {
+            alert("Server Side error please inform raj.saroj@iitb.ac.in");
+          },
         },
       });
     }
+  });
+  $("#subject_stats").on("click", () => {
+    window.location.href = "/stats-page";
   });
 });

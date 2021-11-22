@@ -2,10 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const handlebars = require("express-handlebars");
 const session = require("express-session");
+const dotenv = require("dotenv").config();
 
 //Declarations
 const app = express();
 const PORT = process.env.PORT || 8008;
+const DBUID = process.env.DBUID;
+const DBPASS = process.env.DBPASS;
+const DBSTR = process.env.DBSTR;
 
 //Dependencies
 const RouteController = require("./controllers/RouteController");
@@ -69,9 +73,13 @@ app.get("/register", isNotAuthenticated, RouteController.renderRegister);
 
 app.get("/logout", isAuthenticated, RouteController.logout);
 
+app.get("/stats-page", isAuthenticated, RouteController.renderStats);
+
+//temp
 app.get("/addcourse", (req, res) => {
   res.render("addcourse");
 });
+// app.post("/api/clear-bid", RouteController.clearBid);
 
 //auth routes
 app.post("/api/auth/login", RouteController.login);
@@ -96,6 +104,14 @@ app.get(
   RouteController.verifyRegistration
 );
 
+app.post("/api/fetch-bidrange", RouteController.fetchBidRange);
+
+app.post(
+  "/api/remove-individual-bid",
+  isAuthenticated,
+  RouteController.resetMyBid
+);
+
 //app.get("/api/verifyReset/:tokenCode", RouteController.verifyReset);
 
 //Bidding routes
@@ -106,13 +122,11 @@ app.post(
   RouteController.biddingHandler
 );
 
-// app.post("/api/clear-bid", RouteController.clearBid);
-
 mongoose
-  .connect(
-    "mongodb+srv://r4id:khuljasimsim@r4id-cluster.fwjpl.mongodb.net/course_bidding_portal?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(`mongodb+srv://${DBUID}:${DBPASS}@${DBSTR}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("Mongodb connected");
     app.listen(PORT, () => {

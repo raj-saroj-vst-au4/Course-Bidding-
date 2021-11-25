@@ -7,6 +7,7 @@ const dotenv = require("dotenv").config();
 //Declarations
 const app = express();
 const PORT = process.env.PORT || 8008;
+const HOST = process.env.HOST;
 const DBUID = process.env.DBUID;
 const DBPASS = process.env.DBPASS;
 const DBSTR = process.env.DBSTR;
@@ -130,7 +131,7 @@ mongoose
   .then(() => {
     console.log("Mongodb connected");
     app.listen(PORT, () => {
-      console.log(`server is working now on port ${PORT}`);
+      console.log(`server is working now on ${HOST} and port ${PORT}`);
     });
   })
   .catch((err) => {

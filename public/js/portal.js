@@ -6,16 +6,18 @@ $(document).ready(function () {
       method: "POST",
       url: "/api/fetch-bidrange",
       data: { course_code: course_code },
-      status: {
-        200: function (data, status, xhr) {
+      statusCode: {
+        200: function (result, status, xhr) {
           $("#auc-course-code").html(course_code);
+          $("#max_bid").html(result.max);
+          $("#min_bid").html(result.min);
           $("#prev_bids").modal("show");
-          console.log(data);
+          console.log(result);
         },
-        404: function (data) {
+        404: function (output) {
           alert("Not enough bids till now");
-          $("#auc-course-code").html(course_code);
-          $("#prev_bids").modal("show");
+          // $("#auc-course-code").html(course_code);
+          // $("#prev_bids").modal("show");
         },
       },
     });

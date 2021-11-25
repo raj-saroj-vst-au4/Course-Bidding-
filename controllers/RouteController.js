@@ -180,11 +180,12 @@ RouteController.fetchBidRange = async (req, res) => {
         const max_bid = data.course_students[0].student_bid;
         const min_bid = data.course_students.slice(-1)[0].student_bid;
         return res.status(200).send({ max: max_bid, min: min_bid });
+      } else {
+        console.log("Insufficient bids till now");
+        return res.status(404).send("Not Enough Bids till now");
       }
     }
   );
-  console.log("Insufficient bids till now");
-  return res.status(404).send("Not Enough Bids till now");
 };
 
 RouteController.resetMyBid = async (req, res) => {

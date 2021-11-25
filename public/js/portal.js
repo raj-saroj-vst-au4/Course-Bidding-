@@ -81,10 +81,34 @@ $(document).ready(function () {
     }
   });
 
+  //enable input field
+  $('input[type="checkbox"]').click(function () {
+    if ($(this).is(":checked")) {
+      $(this).closest("tr").find("input").prop("disabled", false);
+    } else if ($(this).is(":not(:checked)")) {
+      $(this).closest("tr").find("input").prop("disabled", true);
+    }
+  });
+
+  //checkbox counter
+
+  // var countCheckedCheckboxesTerm1 = 0;
+  // var countCheckedCheckboxesTerm2 = 0;
+  // console.log($("#bidpoints-left").text());
+
+  // var $checkboxes = $('input[type="checkbox", id]');
+
+  // $checkboxes.change(function () {
+  //   countCheckedCheckboxesTerm1 = $checkboxes.filter(":checked").length;
+  //   console.log(
+  //     " total count of checked boxes : " + countCheckedCheckboxesTerm1
+  //   );
+  // });
+
   //final bid submission js
   $("#bid_submit").click(function () {
     var bid_dataArray = [];
-    console.log($("#bidpoints-left").text());
+
     $(".bid-num").each(function () {
       var course_code = $(this).closest("tr").find("td:first").text();
       var course_bid = $(this).closest("tr").find("input").val();

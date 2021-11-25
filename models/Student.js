@@ -28,9 +28,14 @@ const studentSchema = new Schema(
       type: Number,
       default: 0,
     },
+    bidding_resets: {
+      type: Number,
+      default: 2,
+      min: 0,
+    },
     bidding_complete: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

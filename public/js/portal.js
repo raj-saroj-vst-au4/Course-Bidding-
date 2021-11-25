@@ -12,8 +12,10 @@ $(document).ready(function () {
           $("#prev_bids").modal("show");
           console.log(data);
         },
-        404: function (err) {
-          console.log(err);
+        404: function (data) {
+          alert("Not enough bids till now");
+          $("#auc-course-code").html(course_code);
+          $("#prev_bids").modal("show");
         },
       },
     });
@@ -48,10 +50,13 @@ $(document).ready(function () {
     $.ajax({
       method: "POST",
       url: "/api/remove-individual-bid",
-      status: {
+      statusCode: {
         200: () => {
           alert("Your bids have been reset");
           window.location.reload();
+        },
+        500: () => {
+          alert("Server side error contact sysad");
         },
       },
     });

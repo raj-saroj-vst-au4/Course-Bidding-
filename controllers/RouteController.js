@@ -148,7 +148,7 @@ RouteController.biddingHandler = async (req, res) => {
   }
   await student_som.findOneAndUpdate(
     { student_email: req.session.username },
-    { $set: { bidding_complete: true } },
+    { $inc: { bidding_complete: 1 } },
     (error, data) => {
       if (data) {
         return res.status(200).send("All Bids Successfully Placed");
@@ -160,6 +160,7 @@ RouteController.biddingHandler = async (req, res) => {
 };
 
 RouteController.fetchBidRange = async (req, res) => {
+  console.log("Fetching bid range");
   const course_code = req.body.course_code;
   await course_som.findOne(
     {
@@ -170,25 +171,59 @@ RouteController.fetchBidRange = async (req, res) => {
         console.log(err);
         return res.send(err);
       }
-      console.log(
-        `First element ${data.course_students[0]}, Last Element ${
-          data.course_students.slice(-1)[0]
-        }`
-      );
-      const max_bid = data.course_students[0].student_bid;
-      const min_bid = data.course_students.slice(-1)[0].student_bid;
-      if (max_bid && min_bid) {
+      if (data.course_students.length) {
+        console.log(
+          `First element ${data.course_students[0]}, Last Element ${
+            data.course_students.slice(-1)[0]
+          }`
+        );
+        const max_bid = data.course_students[0].student_bid;
+        const min_bid = data.course_students.slice(-1)[0].student_bid;
         return res.status(200).send({ max: max_bid, min: min_bid });
-      } else {
-        return res.sendStatus(404);
       }
     }
   );
+  console.log("Insufficient bids till now");
+  return res.status(404).send("Not Enough Bids till now");
 };
 
 RouteController.resetMyBid = async (req, res) => {
-  console.log(req.session.username);
-  //await course_som.updateMany({}, {$pullAll})
+  console.log(`Resetting Bids for ${req.session.username}`);
+  await student_som.findOne(
+    { student_email: req.session.username },
+    (err, student) => {
+      if (!student.bidding_resets) {
+        return res.status(201).send("You have exhausted your reset limit");
+      }
+    }
+  );
+
+  await course_som.updateMany(
+    {},
+    {
+      $pull: {
+        course_students: { student_email: req.session.username },
+      },
+    },
+    (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+      student_som.updateOne(
+        {
+          student_email: req.session.username,
+        },
+        { $inc: { bidding_resets: -1, bidding_complete: -1 } },
+        { multi: true },
+        (err, data) => {
+          if (err) {
+            return console.log(err);
+          }
+          return res.status(200).send("Your bids have been reset");
+        }
+      );
+    }
+  );
 };
 // const checkBidStatus = async (req) => {
 //   await student_som.findOne(

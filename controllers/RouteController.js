@@ -148,7 +148,7 @@ RouteController.biddingHandler = async (req, res) => {
   }
   await student_som.findOneAndUpdate(
     { student_email: req.session.username },
-    { $inc: { bidding_complete: 1 } },
+    { bidding_complete: 1 },
     (error, data) => {
       if (data) {
         return res.status(200).send("All Bids Successfully Placed");

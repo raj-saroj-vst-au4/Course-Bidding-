@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(".view_bids").on("click", function () {
-    var course_code = $(this).closest("tr").find("td:first").text();
+    var course_code = $(this).closest("tr").find("td:eq(1)").text();
 
     $.ajax({
       method: "POST",
@@ -15,7 +15,7 @@ $(document).ready(function () {
           console.log(result);
         },
         404: function (output) {
-          alert("Not enough bids till now");
+          alert("Not enough bids on the subject till now");
           // $("#auc-course-code").html(course_code);
           // $("#prev_bids").modal("show");
         },
@@ -84,9 +84,10 @@ $(document).ready(function () {
   //enable input field
   $('input[type="checkbox"]').click(function () {
     if ($(this).is(":checked")) {
-      $(this).closest("tr").find("input").prop("disabled", false);
+      $(this).closest("tr").find(".bid-num").prop("disabled", false);
     } else if ($(this).is(":not(:checked)")) {
-      $(this).closest("tr").find("input").prop("disabled", true);
+      $(this).closest("tr").find(".bid-num").prop("disabled", true);
+      $(this).closest("tr").find(".bid-num").val("");
     }
   });
 
@@ -110,8 +111,8 @@ $(document).ready(function () {
     var bid_dataArray = [];
 
     $(".bid-num").each(function () {
-      var course_code = $(this).closest("tr").find("td:first").text();
-      var course_bid = $(this).closest("tr").find("input").val();
+      var course_code = $(this).closest("tr").find("td:eq(1)").text();
+      var course_bid = $(this).closest("tr").find(".bid-num").val();
       if (course_bid) {
         bid_dataArray.push({ course_code: course_code, bid: course_bid });
       }

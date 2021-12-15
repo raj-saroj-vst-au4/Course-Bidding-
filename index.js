@@ -79,6 +79,8 @@ app.get("/stats-page", isAuthenticated, RouteController.renderStats);
 app.get("/addcourse", (req, res) => {
   res.render("addcourse");
 });
+
+// to clear all bids
 // app.post("/api/clear-bid", RouteController.clearBid);
 
 //auth routes
@@ -105,6 +107,7 @@ app.get(
 );
 
 app.post("/api/fetch-bidrange", RouteController.fetchBidRange);
+app.post("/api/fetch-stats", RouteController.fetchStats);
 
 app.post(
   "/api/remove-individual-bid",

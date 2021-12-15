@@ -170,8 +170,7 @@ RouteController.fetchBidRange = async (req, res) => {
       if (err) {
         console.log(err);
         return res.send(err);
-      }
-      if (data.course_students.length) {
+      } else if (data.course_students.length) {
         console.log(
           `First element ${data.course_students[0]}, Last Element ${
             data.course_students.slice(-1)[0]
@@ -182,10 +181,22 @@ RouteController.fetchBidRange = async (req, res) => {
         return res.status(200).send({ max: max_bid, min: min_bid });
       } else {
         console.log("Insufficient bids till now");
-        return res.status(404).send("Not Enough Bids till now");
+        return res.status(404).send("Not Enough Bids till now on this subject");
       }
     }
   );
+};
+
+RouteController.fetchStats = async (req, res) => {
+  console.log("Fetching stats");
+  await course_som.find({}, (err, result) => {
+    //console.log(result);
+    if (err) {
+      console.log(err);
+      return res.status(404).send("Internal Server error Contact Admin");
+    }
+    return res.status(200).send(result);
+  });
 };
 
 RouteController.resetMyBid = async (req, res) => {
